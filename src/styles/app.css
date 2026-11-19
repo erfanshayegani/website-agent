@@ -1606,3 +1606,30 @@ textarea:focus {
   font-size: 0.76rem;
   color: var(--text-muted);
 }
+
+/* Theme toggle: glowing blue moon (light mode) / golden sun (dark mode),
+   matching the main website. */
+.icon-button.theme-toggle {
+  color: #5b6cf0;
+  border-color: rgba(91, 108, 240, 0.45);
+  background: rgba(91, 108, 240, 0.1);
+  box-shadow: 0 0 10px rgba(91, 108, 240, 0.35);
+}
+.icon-button.theme-toggle:hover,
+.icon-button.theme-toggle:focus-visible {
+  color: #4453e0;
+  border-color: #5b6cf0;
+  box-shadow: 0 0 0 3px rgba(91, 108, 240, 0.2), 0 0 18px rgba(91, 108, 240, 0.55);
+}
+:root[data-theme="dark"] .icon-button.theme-toggle {
+  color: #fbbf24;
+  border-color: rgba(251, 191, 36, 0.5);
+  background: rgba(251, 191, 36, 0.12);
+  box-shadow: 0 0 12px rgba(251, 191, 36, 0.4);
+}
+:root[data-theme="dark"] .icon-button.theme-toggle:hover,
+:root[data-theme="dark"] .icon-button.theme-toggle:focus-visible {
+  color: #fcd34d;
+  border-color: #fbbf24;
+  box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.2), 0 0 20px rgba(251, 191, 36, 0.6);
+}

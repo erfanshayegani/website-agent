@@ -28,7 +28,7 @@ export default function Header() {
         </a>
         <button
           type="button"
-          className="icon-button"
+          className="icon-button theme-toggle"
           onClick={toggle}
           aria-label="Toggle dark mode"
           title="Toggle dark mode"

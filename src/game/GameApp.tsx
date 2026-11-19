@@ -15,7 +15,7 @@ function ThemeToggle() {
   return (
     <button
       type="button"
-      className="icon-button"
+      className="icon-button theme-toggle"
       aria-label="Toggle dark mode"
       title="Toggle dark mode"
       onClick={() => {
