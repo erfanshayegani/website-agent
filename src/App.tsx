@@ -51,7 +51,12 @@ export default function App() {
       <div className="workspace">
         {/* left: input */}
         <aside className="pane pane--left" aria-label="Task">
-          <ModelCard phase={agent.modelPhase} progress={agent.progress} onLoad={agent.load} />
+          <ModelCard
+            phase={agent.modelPhase}
+            runPhase={agent.runPhase}
+            progress={agent.progress}
+            onLoad={agent.load}
+          />
           <Composer
             canRun={modelReady && !busy}
             busy={busy}

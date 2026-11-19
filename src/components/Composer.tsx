@@ -155,7 +155,7 @@ export default function Composer({
         })}
       </fieldset>
 
-      <McpPanel connection={mcpConnection} busy={busy} onChange={onMcpChange} />
+      <McpPanel connection={mcpConnection} onChange={onMcpChange} />
     </section>
   );
 }

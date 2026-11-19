@@ -1,17 +1,20 @@
-import { AlertTriangle, CheckCircle2, Cpu, Power } from "lucide-react";
+import { AlertTriangle, CheckCircle2, Power } from "lucide-react";
 import { useEffect, useState } from "react";
 import { MODEL_ID, getModelLoadLabel, getModelMetadata, type ModelMetadata } from "../model";
-import type { LoadProgress, ModelPhase } from "../types";
+import type { LoadProgress, ModelPhase, RunPhase } from "../types";
+import AgentMascot from "./AgentMascot";
 import { formatBytes } from "../utils/format";
 
 const hasWebGpu = typeof navigator !== "undefined" && "gpu" in navigator;
 
 export default function ModelCard({
   phase,
+  runPhase,
   progress,
   onLoad,
 }: {
   phase: ModelPhase;
+  runPhase: RunPhase;
   progress: LoadProgress | null;
   onLoad(): void;
 }) {
@@ -28,25 +31,37 @@ export default function ModelCard({
   const cached = metadata.status === "ready" && metadata.isPipelineCached;
   const percent = Math.max(0, Math.min(100, progress?.progress ?? 0));
 
-  if (phase === "ready")
+  if (phase === "ready") {
+    const mood =
+      runPhase === "thinking" ? "working" : runPhase === "waiting" ? "asking" : "awake";
     return (
       <section className="card power power--ready" aria-live="polite">
-        <span className="power__dot" aria-hidden />
-        <CheckCircle2 size={18} aria-hidden className="power__ok" />
+        <AgentMascot state={mood} size={52} />
         <div>
-          <strong>Agent is awake</strong>
-          <span className="muted small"> · {MODEL_ID} · q4f16 · running on your GPU</span>
+          <strong className="power__awake">
+            {mood === "working" ? (
+              <>Agent is working… 🛠️</>
+            ) : mood === "asking" ? (
+              <>Waiting for your answer ❓</>
+            ) : (
+              <>
+                <CheckCircle2 size={16} aria-hidden className="power__ok" /> Agent is awake ⚡
+              </>
+            )}
+          </strong>
+          <span className="muted small"> {MODEL_ID} · q4f16 · running on your GPU</span>
         </div>
       </section>
     );
+  }
 
   return (
     <section className="card power" aria-live="polite">
-      <div className="power__chip" aria-hidden>
-        <Cpu size={26} />
-      </div>
+      <AgentMascot state={phase === "loading" ? "waking" : "asleep"} size={72} />
       <div className="power__body">
-        <h2 className="power__title">Wake up the agent</h2>
+        <h2 className="power__title">
+          {phase === "loading" ? "Waking up… ☕" : "The agent is asleep 😴"}
+        </h2>
         <p className="muted small">
           {cached
             ? "The model is already in your browser cache, so this only takes a few seconds."

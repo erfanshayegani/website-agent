@@ -22,27 +22,33 @@ export default function Header() {
 
   return (
     <header className="topbar">
-      <a className="topbar__back" href={SITE_URL}>
-        <ArrowLeft size={15} aria-hidden /> Erfan Shayegani
-      </a>
+      <div className="topbar__left">
+        <a className="topbar__back" href={SITE_URL}>
+          <ArrowLeft size={15} aria-hidden /> Erfan Shayegani 😈
+        </a>
+        <button
+          type="button"
+          className="icon-button"
+          onClick={toggle}
+          aria-label="Toggle dark mode"
+          title="Toggle dark mode"
+        >
+          {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
+        </button>
+      </div>
       <div className="topbar__brand">
         <span className="orb" aria-hidden>
           <span className="orb__core" />
           <span className="orb__ring" />
         </span>
         <h1 className="topbar__title">
-          Erfan Shayegani's 😈 <span className="gradient-text">Agent</span>
+          <a className="topbar__owner" href={SITE_URL}>
+            Erfan Shayegani
+          </a>
+          's 😈 <span className="gradient-text">Agent</span>
         </h1>
       </div>
-      <button
-        type="button"
-        className="icon-button"
-        onClick={toggle}
-        aria-label="Toggle dark mode"
-        title="Toggle dark mode"
-      >
-        {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
-      </button>
+      <span aria-hidden />
     </header>
   );
 }
