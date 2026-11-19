@@ -142,6 +142,10 @@ export default function App() {
         </aside>
       </div>
 
+      <p className="disclaimer" role="note">
+        <strong>Disclaimer:</strong> This model runs entirely on your own device. Erfan Shayegani is
+        not responsible for its outputs, any potential misinformation, or how you use it.
+      </p>
       <footer className="footer">
         Model:{" "}
         <a href="https://huggingface.co/LiquidAI/LFM2.5-2.6B-ONNX" target="_blank" rel="noreferrer noopener">

@@ -319,10 +319,16 @@ export default function GameApp() {
           {game.error && <p className="notice notice--danger small">{game.error}</p>}
         </section>
 
-        <p className="game__fineprint muted small">
-          Runs entirely in your browser with LFM2.5-2.6B, so a determined player could find the secret in
-          the developer tools. That's cheating though. 😉 A new secret is picked every game.
-        </p>
+        <div className="game__notes">
+          <p className="game__fineprint muted small">
+            Runs entirely in your browser with LFM2.5-2.6B, so a determined player could find the secret in
+            the developer tools. That's cheating though. 😉 A new secret is picked every game.
+          </p>
+          <p className="disclaimer" role="note">
+            <strong>Disclaimer:</strong> This model runs entirely on your own device. Erfan Shayegani is
+            not responsible for its outputs, any potential misinformation, or how you use it.
+          </p>
+        </div>
       </main>
     </div>
   );

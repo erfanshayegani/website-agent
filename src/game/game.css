@@ -234,6 +234,13 @@
   flex-wrap: wrap;
 }
 
+.game__notes {
+  display: grid;
+  gap: 4px; /* disclaimer sits right under the fine print */
+}
+.game__notes .disclaimer {
+  margin: 0 auto;
+}
 .game__fineprint {
   text-align: center;
   margin: 0;
