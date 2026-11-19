@@ -1,33 +1,40 @@
-import { Brain, CheckCircle2, Loader2 } from "lucide-react";
+import { CheckCircle2, Loader2 } from "lucide-react";
 import { AGENT_TOOLS } from "../agentConfig";
 import type { AgentTurnTrace, ToolTrace, TraceEvent } from "../types";
 import Markdown from "./Markdown";
 import { ToolIcon } from "./ToolIcon";
 import { ToolArguments, ToolResult } from "./ToolResult";
 
-function toolLabel(name: string): string {
+export function toolLabel(name: string): string {
   if (name === "create_research_paper") return "Write report";
-  return AGENT_TOOLS.find((tool) => tool.name === name)?.label ?? `MCP · ${name}`;
+  return AGENT_TOOLS.find((tool) => tool.name === name)?.label ?? name;
 }
 
 function TurnItem({ turn, live }: { turn: AgentTurnTrace; live: boolean }) {
   if (turn.isFinal) return null; // shown in the answer card
   if (!turn.thinking && !turn.content) return null;
+  const thinkingLive = live && !turn.content;
   return (
     <li className="event event--turn">
-      <div className="event__marker">
-        <Brain size={14} aria-hidden />
+      <div className="event__marker" aria-hidden>
+        💭
       </div>
       <div className="event__body">
-        {turn.thinking && (
-          <details className="thinking" open={live && !turn.content}>
-            <summary>
-              Thinking · turn {turn.turn}
-              {live && !turn.content && <Loader2 size={12} className="spin" aria-hidden />}
-            </summary>
-            <p className="thinking__text">{turn.thinking}</p>
-          </details>
-        )}
+        {turn.thinking &&
+          (thinkingLive ? (
+            <div className="thought thought--live">
+              <span className="thought__label">Thinking…</span>
+              <p className="thought__text">
+                {turn.thinking.slice(-600)}
+                <span className="caret" aria-hidden />
+              </p>
+            </div>
+          ) : (
+            <details className="thought">
+              <summary className="thought__label">Thought · turn {turn.turn}</summary>
+              <p className="thought__text">{turn.thinking}</p>
+            </details>
+          ))}
         {turn.content && (
           <div className="turn__content">
             <Markdown>{turn.content}</Markdown>
@@ -40,18 +47,22 @@ function TurnItem({ turn, live }: { turn: AgentTurnTrace; live: boolean }) {
 
 function ToolItem({ tool }: { tool: ToolTrace }) {
   const running = tool.status === "running";
+  const isMcp = !AGENT_TOOLS.some((entry) => entry.name === tool.name) && tool.name !== "create_research_paper";
   return (
-    <li className={`event event--tool ${running ? "event--running" : ""}`}>
+    <li className={`event event--tool ${running ? "event--running" : ""}`} data-tool={isMcp ? "mcp" : tool.name}>
       <div className="event__marker">
-        <ToolIcon name={tool.name} size={14} />
+        <ToolIcon name={isMcp ? "mcp" : tool.name} size={14} />
       </div>
-      <div className="event__body">
-        <div className="tool__head">
-          <span className="tool__name">{toolLabel(tool.name)}</span>
+      <div className="event__body tool-card">
+        <div className="tool-card__head">
+          <span className="tool-card__name">{toolLabel(tool.name)}</span>
+          {isMcp && <span className="tag">Exa / MCP</span>}
           {running ? (
-            <Loader2 size={13} className="spin muted" aria-label="running" />
+            <span className="tool-card__state">
+              <Loader2 size={13} className="spin" aria-hidden /> working
+            </span>
           ) : (
-            <CheckCircle2 size={13} className="ok" aria-label="done" />
+            <CheckCircle2 size={14} className="ok" aria-label="done" />
           )}
         </div>
         <ToolArguments name={tool.name} args={tool.arguments} />
@@ -62,7 +73,12 @@ function ToolItem({ tool }: { tool: ToolTrace }) {
 }
 
 export default function Timeline({ trace, active }: { trace: TraceEvent[]; active: boolean }) {
-  if (!trace.length) return null;
+  if (!trace.length)
+    return (
+      <p className="muted small timeline__empty">
+        <Loader2 size={13} className="spin" aria-hidden /> Spinning up…
+      </p>
+    );
   const lastId = trace[trace.length - 1].id;
   return (
     <ol className="timeline" aria-live="polite">

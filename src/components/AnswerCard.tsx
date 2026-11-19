@@ -1,4 +1,5 @@
-import { Download, Sparkles } from "lucide-react";
+import { Copy, Download } from "lucide-react";
+import { useState } from "react";
 import type { AgentTurnTrace, BrowserArtifact } from "../types";
 import Markdown from "./Markdown";
 
@@ -18,19 +19,39 @@ export default function AnswerCard({
   answer: AgentTurnTrace;
   artifact: BrowserArtifact | null;
 }) {
+  const [copied, setCopied] = useState(false);
   return (
-    <section className="card answer">
-      <div className="answer__head">
-        <h2 className="label">
-          <Sparkles size={14} aria-hidden /> Answer
-        </h2>
-        {artifact && (
-          <button type="button" className="button button--small" onClick={() => download(artifact)}>
-            <Download size={13} aria-hidden /> {artifact.filename}
-          </button>
-        )}
+    <section className="answer">
+      <div className="answer__inner">
+        <div className="answer__head">
+          <h2 className="answer__title">
+            <span className="answer__sparkle" aria-hidden>
+              ✨
+            </span>{" "}
+            Answer
+          </h2>
+          <div className="answer__actions">
+            <button
+              type="button"
+              className="button button--small"
+              onClick={() => {
+                void navigator.clipboard?.writeText(answer.content).then(() => {
+                  setCopied(true);
+                  setTimeout(() => setCopied(false), 1500);
+                });
+              }}
+            >
+              <Copy size={13} aria-hidden /> {copied ? "Copied!" : "Copy"}
+            </button>
+            {artifact && (
+              <button type="button" className="button button--small" onClick={() => download(artifact)}>
+                <Download size={13} aria-hidden /> Report (.md)
+              </button>
+            )}
+          </div>
+        </div>
+        <Markdown>{answer.content}</Markdown>
       </div>
-      <Markdown>{answer.content}</Markdown>
     </section>
   );
 }

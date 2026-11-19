@@ -90,7 +90,7 @@ const readWebpage: AgentToolDefinition = {
   label: "Read webpage",
   summary: "Read a supplied public URL and extract evidence relevant to the request.",
   description:
-    "Downloads a public HTML or text page through the page-reader service. One isolated local research pass analyzes the beginning of the extracted page, up to 8000 tokens, and returns a brief, source URL, and truncation information. Later text is not read when this limit is exceeded. Does not search the web or execute page JavaScript.",
+    "Downloads a public HTML or text page (on this site, through Exa's page reader, so the URL is sent to Exa). One isolated local research pass analyzes the beginning of the extracted page, up to 8000 tokens, and returns a brief, source URL, and truncation information. Later text is not read when this limit is exceeded. Does not search the web or execute page JavaScript.",
   returns: "A focused brief, source URL, relevant excerpts, and explicit partial-coverage information.",
   schema: schema(
     "read_webpage",
@@ -359,20 +359,11 @@ export const AGENT_TOOLS: readonly AgentToolDefinition[] = [
 
 export type ToolName = (typeof AGENT_TOOLS)[number]["name"];
 
-/**
- * read_webpage needs a page reader: the local /__webpage middleware in dev, or
- * the deployed proxy (VITE_WEBPAGE_PROXY_URL) in production. Without either,
- * the tool is not offered.
- */
-export const WEBPAGE_READER_AVAILABLE = Boolean(
-  import.meta.env.DEV || import.meta.env.VITE_WEBPAGE_PROXY_URL
-);
-
 /** Optional built-ins the UI can switch on and off (plan tools are always on). */
 export const OPTIONAL_TOOLS = [
   "ask_user",
   "get_current_context",
   "search_wikipedia",
-  ...(WEBPAGE_READER_AVAILABLE ? ["read_webpage"] : []),
+  "read_webpage",
   "run_python",
 ] as const;

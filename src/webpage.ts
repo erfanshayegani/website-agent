@@ -85,8 +85,15 @@ export async function loadWebpage(
   url: string,
   signal: AbortSignal
 ): Promise<WebpageDocument> {
-  // Production: the Cloudflare Worker in proxy/ (same contract as /__webpage).
-  // Dev/preview: the local /__webpage middleware from webpageServer.ts.
+  // Page source, in order of preference:
+  // 1. a deployed page-reader proxy (VITE_WEBPAGE_PROXY_URL, see proxy/);
+  // 2. dev/preview: the local /__webpage middleware from webpageServer.ts;
+  // 3. otherwise (public static site): Exa's hosted web_fetch_exa.
+  if (!import.meta.env.VITE_WEBPAGE_PROXY_URL && !import.meta.env.DEV) {
+    const { fetchPageViaExa, toWebpageDocument } = await import("./exaReader");
+    const { page, hitLimit } = await fetchPageViaExa(url, MAX_PAGE_CHARS, signal);
+    return toWebpageDocument(page, extractWebpage, hitLimit);
+  }
   const endpoint = import.meta.env.VITE_WEBPAGE_PROXY_URL || "/__webpage";
   const response = await fetch(endpoint, {
     method: "POST",

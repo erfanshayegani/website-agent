@@ -2,6 +2,10 @@ import { useEffect, useRef, useState } from "react";
 import { DEFAULT_MCP_URL, McpConnection } from "../mcpClient";
 import type { McpConfiguration } from "../mcpTypes";
 
+/** Tools left unticked on the default connection. web_fetch_exa duplicates
+ *  read_webpage (which already uses Exa to download pages on the public site). */
+const DEFAULT_OFF = new Set(["web_fetch_exa"]);
+
 export default function McpPanel({
   connection,
   busy,
@@ -20,7 +24,7 @@ export default function McpPanel({
   useEffect(() => {
     busyRef.current = busy;
   }, [busy]);
-  const connect = async () => {
+  const connect = async (enableAll = false) => {
     setConnecting(true);
     setError("");
     onChange(undefined);
@@ -29,7 +33,13 @@ export default function McpPanel({
     try {
       const next = await connection.connect(url);
       setConfiguration(next);
-      // Connecting alone never gives the model access; select tools explicitly.
+      // Manual connects never give the model access on their own; the default
+      // connection on page load enables the advertised tools except DEFAULT_OFF.
+      if (enableAll) {
+        const tools = next.tools.filter((tool) => !DEFAULT_OFF.has(tool.name));
+        setEnabled(tools.map((tool) => tool.name));
+        onChange({ ...next, tools });
+      }
     } catch (error) {
       setError(error instanceof Error ? error.message : String(error));
     } finally {
@@ -44,6 +54,15 @@ export default function McpPanel({
       tools: configuration.tools.filter((tool) => names.includes(tool.name)),
     });
   };
+  // Connect to the default server (Exa) once on load (see DEFAULT_OFF).
+  const autoConnected = useRef(false);
+  useEffect(() => {
+    if (autoConnected.current) return;
+    autoConnected.current = true;
+    void connect(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <details className="mcp">
       <summary>

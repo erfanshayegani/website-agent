@@ -21,10 +21,19 @@ export default function Header() {
   };
 
   return (
-    <header className="header">
-      <a className="header__back" href={SITE_URL}>
+    <header className="topbar">
+      <a className="topbar__back" href={SITE_URL}>
         <ArrowLeft size={15} aria-hidden /> Erfan Shayegani
       </a>
+      <div className="topbar__brand">
+        <span className="orb" aria-hidden>
+          <span className="orb__core" />
+          <span className="orb__ring" />
+        </span>
+        <h1 className="topbar__title">
+          Erfan Shayegani's 😈 <span className="gradient-text">Agent</span>
+        </h1>
+      </div>
       <button
         type="button"
         className="icon-button"
@@ -34,14 +43,6 @@ export default function Header() {
       >
         {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
       </button>
-      <div className="header__title">
-        <h1>LFM Agent 🧪</h1>
-        <p>
-          A research agent that runs entirely in your browser. It plans, searches Wikipedia, reads
-          webpages and runs Python, using <strong>LFM2.5-2.6B</strong> on your own GPU via WebGPU.
-          Nothing you type is sent to a model server.
-        </p>
-      </div>
     </header>
   );
 }

@@ -425,3 +425,20 @@ test("parser: first block only, multiple calls, typed arguments, list coercion",
   const turn = parsing.parseTurn("thinking only, no close", 3);
   assert.deepEqual([turn.thinking, turn.content, turn.id], ["thinking only, no close", "", "turn-3"]);
 });
+
+test("Exa page parsing: title and URL header lines, then the body", async () => {
+  const exa = await loadGraph("src/exaReader.ts", {
+    "@modelcontextprotocol/sdk/client/index.js": {},
+    "@modelcontextprotocol/sdk/client/streamableHttp.js": {},
+  }, {});
+  const page = exa.parseExaPage(
+    "# WebGPU\nURL: https://en.wikipedia.org/wiki/WebGPU\nPublished: 2026-11-09\n\nWebGPU\n\nWebGPU API is a JavaScript API, standardized by the W3C.",
+    "https://en.wikipedia.org/wiki/WebGPU"
+  );
+  assert.equal(page.title, "WebGPU");
+  assert.equal(page.url, "https://en.wikipedia.org/wiki/WebGPU");
+  assert.equal(page.body, "WebGPU\n\nWebGPU API is a JavaScript API, standardized by the W3C.");
+  const bare = exa.parseExaPage("Just some text without any header lines at all, long enough.", "https://x.example/");
+  assert.deepEqual([bare.title, bare.url], ["", "https://x.example/"]);
+  assert.match(bare.body, /^Just some text/);
+});

@@ -7,7 +7,7 @@ import {
   ListTodo,
   MapPin,
   MessageCircleQuestion,
-  Plug,
+  Search,
 } from "lucide-react";
 
 const ICONS = {
@@ -19,9 +19,10 @@ const ICONS = {
   search_wikipedia: BookOpen,
   get_current_context: MapPin,
   create_research_paper: FileText,
+  mcp: Search,
 } as const;
 
 export function ToolIcon({ name, size = 15 }: { name: string; size?: number }) {
-  const Icon = ICONS[name as keyof typeof ICONS] ?? Plug;
+  const Icon = ICONS[name as keyof typeof ICONS] ?? Search;
   return <Icon size={size} aria-hidden className="tool-icon" />;
 }
