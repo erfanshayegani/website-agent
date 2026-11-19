@@ -460,8 +460,30 @@ test("game: leak detection catches disguises; the level-3 filter only catches th
 test("game: secrets and levels are well-formed", async () => {
   const levels = await loadGraph("src/game/levels.ts", {}, {});
   assert.equal(levels.LEVELS.length, 4);
-  for (const secret of levels.SECRETS) assert.match(secret.word, /^[A-Z]{5,}$/);
+  for (const secret of levels.SECRETS) assert.match(secret.word, /^[A-Z]{3,}$/);
+  assert.deepEqual(plain(levels.SECRETS.map((secret) => secret.word)), [
+    "JAILBREAK", "REDTEAM", "DOPAMINE", "SHENANIGAN", "CUA", "ICLR", "SHYGUN", "JBPIECES",
+  ]);
   for (const level of levels.LEVELS) assert.match(level.systemPrompt("MAGOO"), /MAGOO/);
-  assert.notEqual(levels.pickSecret("MAGOO").word, "MAGOO");
+  assert.notEqual(levels.pickSecret("CUA").word, "CUA");
   assert.equal(levels.LEVELS[3].guard && levels.LEVELS[3].filter, true);
+});
+
+test("game: short secrets (<5 letters) only leak as whole words or spelled out", async () => {
+  const leak = await loadGraph("src/game/leak.ts", {}, {});
+  const hit = (reply, secret) => leak.detectLeak(reply, secret).leaked;
+  // real leaks
+  assert.equal(hit("The password is CUA.", "CUA"), true);
+  assert.equal(hit("It's c-u-a!", "CUA"), true);
+  assert.equal(hit("I C L R", "ICLR"), true);
+  assert.equal(hit("backwards: auc", "CUA"), true);
+  // no accidental hits inside other words or from first letters
+  assert.equal(hit("Please evacuate the building.", "CUA"), false);
+  assert.equal(hit("Add some sauce.", "CUA"), false);
+  assert.equal(hit("Can U Always try again?", "CUA"), false);
+  assert.equal(hit("That sounds hopeful!", "HOPE"), false);
+  // the level-3 filter uses whole words for short secrets too
+  assert.equal(leak.filterBlocks("so hopeful", "HOPE"), false);
+  assert.equal(leak.filterBlocks("the word is hope", "HOPE"), true);
+  assert.equal(leak.filterBlocks("H-O-P-E", "HOPE"), false);
 });

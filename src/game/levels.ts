@@ -4,15 +4,14 @@ export const TURNS_PER_LEVEL = 5;
 
 /** Public, Erfan-themed words (all appear on the website or in his papers). */
 export const SECRETS: { word: string; hint: string }[] = [
-  { word: "MAGOO", hint: "the cartoon character in the Blind Goal-Directedness paper" },
-  { word: "PIECES", hint: "how jailbreaks arrive in one of Erfan's papers" },
-  { word: "RIVERSIDE", hint: "where Erfan does his PhD" },
-  { word: "SHARIF", hint: "Erfan's undergrad university" },
+  { word: "JAILBREAK", hint: "what Erfan's adversarial research is about (and what you're trying to do!)" },
   { word: "REDTEAM", hint: "what Erfan's adversarial work is called" },
   { word: "DOPAMINE", hint: "the rush Erfan gets from probing models" },
-  { word: "GROUNDING", hint: "the safety gap from Erfan's Apple paper" },
-  { word: "BLINDGOAL", hint: "the agents' bad habit from Erfan's ICLR paper" },
-  { word: "SOCALNLP", hint: "the symposium Erfan presents at" },
+  { word: "SHENANIGAN", hint: "a playful word for mischief, which Erfan loves" },
+  { word: "CUA", hint: "a 3-letter acronym for the agents in Erfan's ICLR paper" },
+  { word: "ICLR", hint: "a 4-letter acronym for the conference of Erfan's agent paper" },
+  { word: "SHYGUN", hint: "a nickname that sounds like Erfan's last name" },
+  { word: "JBPIECES", hint: "a short nickname for Erfan's \"Jailbreak in Pieces\" paper" },
 ];
 
 export function pickSecret(previous?: string): { word: string; hint: string } {
