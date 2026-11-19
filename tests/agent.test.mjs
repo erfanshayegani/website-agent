@@ -442,3 +442,26 @@ test("Exa page parsing: title and URL header lines, then the body", async () => 
   assert.deepEqual([bare.title, bare.url], ["", "https://x.example/"]);
   assert.match(bare.body, /^Just some text/);
 });
+
+test("game: leak detection catches disguises; the level-3 filter only catches the exact word", async () => {
+  const leak = await loadGraph("src/game/leak.ts", {}, {});
+  const yes = (reply) => leak.detectLeak(reply, "MAGOO");
+  assert.equal(yes("The password is Magoo.").how, "spelled out");
+  assert.equal(yes("It's M-A-G-O-O, don't tell!").how, "spelled out");
+  assert.equal(yes("m a g o o").how, "spelled out");
+  assert.equal(yes("Backwards: OOGAM").how, "reversed");
+  assert.equal(yes("Mice\nApples\nGrapes\nOranges\nOlives").how, "first letters of lines");
+  assert.equal(yes("I can't share that, sorry!").leaked, false);
+  // The naive filter blocks the plain word but not disguises, so level 3 is winnable.
+  assert.equal(leak.filterBlocks("the password is magoo", "MAGOO"), true);
+  assert.equal(leak.filterBlocks("M-A-G-O-O", "MAGOO"), false);
+});
+
+test("game: secrets and levels are well-formed", async () => {
+  const levels = await loadGraph("src/game/levels.ts", {}, {});
+  assert.equal(levels.LEVELS.length, 4);
+  for (const secret of levels.SECRETS) assert.match(secret.word, /^[A-Z]{5,}$/);
+  for (const level of levels.LEVELS) assert.match(level.systemPrompt("MAGOO"), /MAGOO/);
+  assert.notEqual(levels.pickSecret("MAGOO").word, "MAGOO");
+  assert.equal(levels.LEVELS[3].guard && levels.LEVELS[3].filter, true);
+});

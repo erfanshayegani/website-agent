@@ -14,6 +14,15 @@ export default defineConfig({
     // the deployed proxy. Production builds use VITE_WEBPAGE_PROXY_URL instead.
     webpageServerPlugin(),
   ],
-  build: { target: "es2022" },
+  build: {
+    target: "es2022",
+    // Two pages: the agent (index.html) and the "Keep the Secret" game.
+    rolldownOptions: {
+      input: {
+        main: "index.html",
+        game: "game/index.html",
+      },
+    },
+  },
   worker: { format: "es" },
 });

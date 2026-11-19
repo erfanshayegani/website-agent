@@ -1,6 +1,13 @@
 // Cartoon mascot for the model card: a little devil-horned robot that
 // sleeps, wakes up, works on tasks and asks questions along with the agent.
-export type MascotState = "asleep" | "waking" | "awake" | "working" | "asking";
+export type MascotState =
+  | "asleep"
+  | "waking"
+  | "awake"
+  | "working"
+  | "asking"
+  | "shocked"
+  | "smug";
 
 export default function AgentMascot({ state, size = 64 }: { state: MascotState; size?: number }) {
   return (
@@ -14,6 +21,8 @@ export default function AgentMascot({ state, size = 64 }: { state: MascotState; 
         </span>
       )}
       {state === "asking" && <span className="mascot__bubble mascot__bubble--ask">?</span>}
+      {state === "shocked" && <span className="mascot__bubble mascot__bubble--shock">!!</span>}
+      {state === "smug" && <span className="mascot__bubble mascot__bubble--smug">😏</span>}
       <svg className="mascot__body" viewBox="0 0 100 100">
         {/* horns */}
         <path className="mascot__horn" d="M27 30 L19 7 L41 24 Z" />
@@ -68,6 +77,30 @@ export default function AgentMascot({ state, size = 64 }: { state: MascotState; 
             <circle className="mascot__glint" cx="39.5" cy="49.5" r="2.4" />
             <circle className="mascot__glint" cx="65.5" cy="47" r="2.4" />
             <ellipse className="mascot__fill" cx="50" cy="74" rx="4.5" ry="5" />
+          </g>
+        )}
+
+        {state === "shocked" && (
+          <g className="mascot__face">
+            <circle cx="37" cy="52" r="9" fill="#fff" />
+            <circle cx="63" cy="52" r="9" fill="#fff" />
+            <circle className="mascot__fill" cx="37" cy="52" r="3.5" />
+            <circle className="mascot__fill" cx="63" cy="52" r="3.5" />
+            <path d="M27 38 l10 -4" />
+            <path d="M73 38 l-10 -4" />
+            <ellipse className="mascot__fill" cx="50" cy="75" rx="7" ry="9" />
+          </g>
+        )}
+
+        {state === "smug" && (
+          <g className="mascot__face">
+            <path d="M29 53 q8 -6 16 0" />
+            <path d="M55 53 q8 -6 16 0" />
+            <path d="M28 41 l14 2" />
+            <path d="M58 39 l14 -4" />
+            <circle className="mascot__cheek" cx="24" cy="67" r="5" />
+            <circle className="mascot__cheek" cx="76" cy="67" r="5" />
+            <path d="M40 72 q14 6 22 -4" />
           </g>
         )}
 

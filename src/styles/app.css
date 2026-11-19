@@ -797,6 +797,56 @@ textarea:focus {
   border-color: #be185d;
 }
 
+/* shocked (secret leaked) + smug (secret kept) */
+.mascot--shocked {
+  --skin: #f87171;
+  --skin-dark: #dc2626;
+  --ink: #3b0a0a;
+}
+.mascot--shocked .mascot__body {
+  animation: shake 0.5s ease-in-out 3;
+}
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0) rotate(0);
+  }
+  25% {
+    transform: translateX(-4px) rotate(-5deg);
+  }
+  75% {
+    transform: translateX(4px) rotate(5deg);
+  }
+}
+.mascot__bubble--shock {
+  background: linear-gradient(135deg, #f87171, #dc2626);
+  border-color: #b91c1c;
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.35);
+}
+.mascot__bubble--shock::after {
+  background: #ec4c4c;
+  border-color: #b91c1c;
+}
+.mascot--smug {
+  --skin: #a78bfa;
+  --skin-dark: #7c3aed;
+  --ink: #1e0b47;
+}
+.mascot--smug .mascot__body {
+  animation: tilt 2.4s ease-in-out infinite;
+}
+.mascot__bubble--smug {
+  padding: 0 6px;
+  font-size: 0.95rem;
+  background: linear-gradient(135deg, #c4b5fd, #8b5cf6);
+  border-color: #7c3aed;
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.35);
+}
+.mascot__bubble--smug::after {
+  background: #a78bf8;
+  border-color: #7c3aed;
+}
+
 /* the awake card leaves room for the working/asking bubbles */
 .power--ready .mascot {
   margin: 8px 22px 0 0;
