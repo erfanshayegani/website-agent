@@ -46,6 +46,32 @@ Optional: to download pages through your own proxy instead of Exa, deploy the
 Worker in `proxy/` (`npx wrangler deploy`) and set an Actions variable
 `WEBPAGE_PROXY_URL` to its URL.
 
+### Fallback hosting (if GitHub Actions is unavailable)
+
+If this repo's deploy ever fails for reasons outside the code (for example
+*"The job was not started because your account is locked due to a billing
+issue"*, which happened on 2026-11-18), serve a locally built copy from the
+website repo instead. The website's own Pages build uses GitHub's built-in branch
+publishing, which kept working during that lock.
+
+1. Build with the fallback base path and copy it into the website repo:
+   ```bash
+   BASE_PATH=/agent/ npm run build
+   rsync -a --delete dist/ ../erfanshayegani.github.io/agent/
+   ```
+   Use `/agent/`, **not** `/website-agent/`: while this repo has Pages enabled,
+   GitHub routes `/website-agent/` to this repo's Pages site, so a folder with
+   that name in the website repo is never served.
+2. In the website repo, point the Playground "Try it" link
+   (`_pages/playground.html`) to `{{ base_path }}/agent/`, then commit and push.
+   The copy is live at https://erfanshayegani.github.io/agent/ a few minutes later.
+3. Repeat step 1 (and push) for every update while the fallback is in use.
+
+To switch back once Actions works again: push any commit here (or re-run the
+latest *Deploy to GitHub Pages* workflow) and confirm `/website-agent/` loads the
+current version. Then point the Playground link back to `/website-agent/`, delete
+the website repo's `agent/` folder, and push.
+
 ## Credits
 
 Model: LFM2.5-2.6B by Liquid AI, under the
