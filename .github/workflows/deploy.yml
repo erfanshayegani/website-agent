@@ -29,6 +29,19 @@ jobs:
         env:
           # Set in the repo: Settings → Secrets and variables → Actions → Variables.
           VITE_WEBPAGE_PROXY_URL: ${{ vars.WEBPAGE_PROXY_URL }}
+      # The agent page (/website-agent/) is disabled; only the game is public.
+      # To re-enable the agent, delete this step.
+      - name: Disable agent page (redirect to homepage)
+        run: |
+          cat > dist/index.html <<'EOF'
+          <!doctype html>
+          <html><head><meta charset="utf-8">
+          <meta name="robots" content="noindex">
+          <meta http-equiv="refresh" content="0; url=https://erfanshayegani.github.io/">
+          <link rel="canonical" href="https://erfanshayegani.github.io/">
+          <title>Redirecting…</title></head>
+          <body><a href="https://erfanshayegani.github.io/">erfanshayegani.github.io</a></body></html>
+          EOF
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
