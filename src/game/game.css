@@ -473,3 +473,12 @@ html:has(.game) {
   border-color: #fb923c;
   box-shadow: 0 0 0 3px rgba(251, 146, 60, 0.2), 0 0 20px rgba(251, 146, 60, 0.6);
 }
+
+/* the gradient "Secret" in the title: brighter colors so it reads on the photos */
+.topbar--photos .gradient-text {
+  background: linear-gradient(90deg, #7dd3fc, #c4b5fd, #f9a8d4);
+  -webkit-background-clip: text;
+  background-clip: text;
+  text-shadow: none;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.55));
+}
