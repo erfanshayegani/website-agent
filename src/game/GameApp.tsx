@@ -1,4 +1,5 @@
 import { ArrowLeft, Lock, Moon, RotateCcw, Send, Square, Sun } from "lucide-react";
+import { SeasonLayers, useSeasonIndex } from "./Seasons";
 import { useEffect, useRef, useState } from "react";
 import AgentMascot, { type MascotState } from "../components/AgentMascot";
 import Markdown from "../components/Markdown";
@@ -84,6 +85,7 @@ function Bubble({ message, reveal }: { message: GameMessage; reveal: boolean }) 
 }
 
 export default function GameApp() {
+  const season = useSeasonIndex();
   const game = useGame();
   const [input, setInput] = useState("");
   const chatLog = useRef<HTMLDivElement>(null);
@@ -117,8 +119,9 @@ export default function GameApp() {
 
   return (
     <div className="app game">
-      <div className="backdrop" aria-hidden />
-      <header className="topbar">
+      <SeasonLayers index={season} className="seasons-bg" />
+      <header className="topbar topbar--photos">
+        <SeasonLayers index={season} className="topbar__photos" />
         <div className="topbar__left">
           <a className="topbar__back" href={SITE_URL}>
             <ArrowLeft size={15} aria-hidden /> Erfan Shayegani 😈

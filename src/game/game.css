@@ -352,3 +352,124 @@
 .bubble__thinking p {
   overflow-wrap: anywhere;
 }
+
+/* ==========================================================================
+   Same look as erfanshayegani.github.io: Seasons photos in the top bar,
+   blurred behind the page, and the site's orange-sun / pink-purple-moon toggle.
+   ========================================================================== */
+
+/* blurred photos behind everything (replaces the color blobs on this page) */
+body:has(.game) {
+  background: transparent;
+  overflow-x: clip;
+}
+html:has(.game) {
+  background: var(--bg);
+}
+.seasons-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+.seasons-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.78);
+}
+:root[data-theme="dark"] .seasons-bg::after {
+  background: rgba(14, 16, 20, 0.8);
+}
+.seasons-bg__photo {
+  position: absolute;
+  inset: -60px;
+  background-size: cover;
+  background-position: center;
+  filter: blur(28px) saturate(1.2);
+  opacity: 0;
+  transition: opacity 2.5s ease;
+}
+.seasons-bg__photo.is-active {
+  opacity: 1;
+}
+
+/* cards: a touch see-through so the background glows through, like the site */
+.game .card {
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+
+/* top bar: full-width photo strip (sky slice), with a dark tint for readability */
+.topbar--photos {
+  position: relative;
+  isolation: isolate;
+  margin: -12px 0 14px;
+  padding: 12px 0;
+}
+.topbar__photos {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(50% - 50vw);
+  width: 100vw;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+.topbar__photos::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(10, 12, 16, 0.55), rgba(10, 12, 16, 0.4));
+}
+.topbar__photos__photo {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center 25%;
+  opacity: 0;
+  transition: opacity 2.5s ease;
+}
+.topbar__photos__photo.is-active {
+  opacity: 1;
+}
+.topbar--photos .topbar__back,
+.topbar--photos .topbar__title {
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+.topbar--photos .topbar__back:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+/* theme toggle: frosted glass disc; pink-purple moon (light), orange sun (dark) */
+.topbar--photos .icon-button.theme-toggle {
+  background: rgba(255, 255, 255, 0.16);
+  -webkit-backdrop-filter: blur(10px) saturate(1.4);
+  backdrop-filter: blur(10px) saturate(1.4);
+  border-width: 1.5px;
+  color: #f472b6;
+  border-color: rgba(244, 114, 182, 0.75);
+  box-shadow: 0 0 12px rgba(236, 72, 153, 0.45);
+}
+.topbar--photos .icon-button.theme-toggle:hover,
+.topbar--photos .icon-button.theme-toggle:focus-visible {
+  color: #f9a8d4;
+  border-color: #f472b6;
+  box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.2), 0 0 18px rgba(236, 72, 153, 0.55);
+}
+:root[data-theme="dark"] .topbar--photos .icon-button.theme-toggle {
+  color: #fb923c;
+  border-color: rgba(251, 146, 60, 0.85);
+  box-shadow: 0 0 14px rgba(251, 146, 60, 0.5);
+}
+:root[data-theme="dark"] .topbar--photos .icon-button.theme-toggle:hover,
+:root[data-theme="dark"] .topbar--photos .icon-button.theme-toggle:focus-visible {
+  color: #fdba74;
+  border-color: #fb923c;
+  box-shadow: 0 0 0 3px rgba(251, 146, 60, 0.2), 0 0 20px rgba(251, 146, 60, 0.6);
+}
